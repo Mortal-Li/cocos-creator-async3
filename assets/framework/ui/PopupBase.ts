@@ -51,7 +51,7 @@ export class PopupBase extends UIBase {
     }
 
     /**
-     * 设置黑色背景透明度，默认200
+     * 设置黑色背景透明度，默认180
      */
     setDarkBgOpacity(opacity: number) {
         this.node.parent.getChildByName("dark").getComponent(UIOpacity).opacity = opacity;
@@ -62,6 +62,7 @@ export class PopupBase extends UIBase {
      * 其他触摸控件如Button、Toggle等会优先响应，不用加到数组
      */
     enableClickBlankToClose(nds: Node[]) {
+        //todo 无参数，则默认第一个子节点
         this.node.on(Node.EventType.TOUCH_END, (evt: EventTouch) => {
             let startPos = evt.getStartLocation();
             let endPos = evt.getLocation();
