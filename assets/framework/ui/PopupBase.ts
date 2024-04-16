@@ -36,7 +36,7 @@ export class PopupBase extends UIBase {
      * 打开弹窗的动画，如果不需要或另外实现则子类中覆盖
      */
     showAnim() {
-        this.node.scale = v3(0, 0, 1);
+        this.node.setScale(0, 0, 1);
         tween(this.node)
             .delay(0)
             .to(0.2, { scale: v3(1, 1, 1) }, { easing: "backOut" })
