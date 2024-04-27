@@ -10,6 +10,8 @@ import LocalManager from "./manager/LocalManager";
 import SoundManager from "./manager/SoundManager";
 import EventManager from "./manager/EventManager";
 import DebugManger from "./manager/DebugManger";
+import HttpManager from "./manager/HttpManager";
+import SocketManager from "./manager/socket/SocketManager";
 
 const kk = {
     uiMgr: new UIManager(),
@@ -17,6 +19,9 @@ const kk = {
     soundMgr: new SoundManager(),
     eventMgr: new EventManager(),
     debugMgr: new DebugManger(),
+    
+    httpMgr: new HttpManager(),
+    socketMgr: new SocketManager(),
     
     godNode: <Node> null,
 
