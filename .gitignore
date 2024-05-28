@@ -17,6 +17,7 @@ node_modules/
 # VSCode
 #//////////////////////////
 .vscode/
+package-lock.json
 
 #//////////////////////////
 # WebStorm

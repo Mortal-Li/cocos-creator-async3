@@ -1,0 +1,72 @@
+{
+    "$schema": "./@types/schema/package/index.json",
+    "package_version": 2,
+    "name": "kk-assist",
+    "version": "1.0.0",
+    "author": "Mortal-Li",
+    "editor": ">=3.8.2",
+    "scripts": {
+        "preinstall": "node ./scripts/preinstall.js",
+        "build": "tsc"
+    },
+    "description": "cocos-creator-async3开发高效助手",
+    "main": "./dist/main.js",
+    "dependencies": {
+        "vue": "^3.1.4",
+        "fs-extra": "^10.0.0"
+    },
+    "devDependencies": {
+        "@cocos/creator-types": "^3.8.2",
+        "@types/fs-extra": "^9.0.5",
+        "@types/node": "^18.17.1"
+    },
+    "panels": {
+        "default": {
+            "title": "kk-assist",
+            "type": "simple",
+            "main": "./dist/panels/default",
+            "size": {
+                "width": 700,
+                "min-width": 700,
+                "height": 520,
+                "min-height": 520
+            }
+        }
+    },
+    "contributions": {
+        "menu": [
+            {
+                "path": "i18n:menu.extension",
+                "label": "kk-assist",
+                "message": "open-panel"
+            }
+        ],
+        "messages": {
+            "open-panel": {
+                "methods": [
+                    "openPanel"
+                ]
+            }
+        },
+        "shortcuts": [
+            {
+                "message": "open-panel",
+                "win": "ctrl+f12",
+                "mac": "cmd+f12"
+            }
+        ],
+        "profile": {
+            "project": {
+                "kk.prefix": {
+                    "label": "Project Res Prefix"
+                },
+                "kk.codeCount": {
+                    "label": "Last code statistics result"
+                },
+                "kk.resCount": {
+                    "label": "Last res statistics result"
+                }
+            }
+        }
+    }
+}
