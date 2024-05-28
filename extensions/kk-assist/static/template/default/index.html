@@ -4,7 +4,6 @@
         <ui-tab :value="curIdx" style="width: 160px;margin-left: 20px;" @confirm="curIdx = $event.target.value">
             <ui-button>UI创建</ui-button>
             <ui-button>项目统计</ui-button>
-            <ui-button>工具</ui-button>
         </ui-tab>
         <div v-if="curIdx == 0" style="margin: 20px; border-width: 1px;border-style: dashed;border-color: gray;padding: 10px;">
             <div style="display: flex;flex-direction: row;">
@@ -104,14 +103,6 @@
                     <ui-button v-if="!isResCounting" type="primary" @confirm="onResCount"><ui-icon value="whirl"></ui-icon>&nbsp;开始统计</ui-button>
                     <ui-loading v-else></ui-loading>
                 </div>
-            </div>
-        </div>
-        <div v-else-if="curIdx == 2" style="margin: 20px; border-width: 1px;border-style: dashed;border-color: gray;padding: 10px;">
-            <div style="display: flex;flex-direction: row;">
-                <ui-label>资源清理:</ui-label>
-            </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-label>资源压缩:</ui-label>
             </div>
         </div>
     </div>
