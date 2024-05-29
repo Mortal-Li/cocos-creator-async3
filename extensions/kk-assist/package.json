@@ -60,10 +60,10 @@
                 "kk.prefix": {
                     "label": "Project Res Prefix"
                 },
-                "kk.codeCount": {
+                "kk.codeInfo": {
                     "label": "Last code statistics result"
                 },
-                "kk.resCount": {
+                "kk.extInfo": {
                     "label": "Last res statistics result"
                 }
             }

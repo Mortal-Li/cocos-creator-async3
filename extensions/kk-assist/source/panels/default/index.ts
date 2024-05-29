@@ -1,8 +1,9 @@
-import { readFileSync } from 'fs-extra';
+import { existsSync, readFileSync } from 'fs-extra';
 import { join } from 'path';
 import { createApp, App } from 'vue';
 import KKCore from '../../core/KKCore';
 import packageJSON from '../../../package.json';
+import KKUtils from '../../core/KKUtils';
 const panelDataMap = new WeakMap<any, App>();
 /**
  * @zh 如果希望兼容 3.3 之前的版本可以使用下方的代码
@@ -30,6 +31,9 @@ module.exports = Editor.Panel.define({
                         allBundles: [],
                         curIdx: 0,
                         projPrefix: "",
+                        uiConfPath: "",
+                        isConfPathExist: false,
+
                         newBundleName: "",
                         bundlePriority: 1,
                         newLayerName: "",
@@ -42,7 +46,7 @@ module.exports = Editor.Panel.define({
                         bundleChoice4: "",
 
                         isCodeCounting: false,
-                        codeInfo: [],
+                        codeInfo: {},
                         isResCounting: false,
                         extInfo: {}
                     };
@@ -60,10 +64,23 @@ module.exports = Editor.Panel.define({
                     },
 
                     onInitProj() {
+                        if (this.projPrefix.length == 0) {
+                            Editor.Dialog.warn("请先设置前缀!", {
+                                buttons: ["OK"]
+                            });
+                            return;
+                        }
                         KKCore.doInitProj(this.projPrefix);
                     },
 
                     async onCreateBundle() {
+                        if (!this.isConfPathExist) {
+                            Editor.Dialog.warn("UI配置文件不存在!", {
+                                buttons: ["OK"]
+                            });
+                            return;
+                        }
+
                         this.newBundleName = this.newBundleName.trim();
                         if (this.newBundleName.length == 0) return;
                         let bundleName = this.projPrefix + this.newBundleName + "Bundle";
@@ -104,31 +121,46 @@ module.exports = Editor.Panel.define({
 
                         this.isCodeCounting = true;
                         let info = KKCore.getCodeCount();
-                        this.codeInfo = [
-                            { name: "注释行数", num: info.comment },
-                            { name: "空行数", num: info.space },
-                            { name: "代码行数", num: info.code },
-                            { name: "总行数", num: info.total },
-                        ];
+                        this.codeInfo = {
+                            time: (new Date()).toLocaleString(),
+                            result: [
+                                { name: "注释行数", num: info.comment },
+                                { name: "空行数", num: info.space },
+                                { name: "代码行数", num: info.code },
+                                { name: "总行数", num: info.total },
+                            ]
+                        };
                         this.isCodeCounting = false;
-                        Editor.Profile.setProject(packageJSON.name, "kk.codeCount", JSON.stringify(this.codeInfo), "project");
+                        Editor.Profile.setProject(packageJSON.name, "kk.codeInfo", JSON.stringify(this.codeInfo), "project");
                     },
 
                     onResCount() {
                         if (this.isCodeCounting) return;
 
                         this.isResCounting = true;
-                        this.extInfo = KKCore.getResCount();
+                        this.extInfo = {
+                            time: (new Date()).toLocaleString(),
+                            result: KKCore.getResCount()
+                        };
                         this.isResCounting = false;
-                        Editor.Profile.setProject(packageJSON.name, "kk.resCount", JSON.stringify(this.extInfo), "project");
+                        Editor.Profile.setProject(packageJSON.name, "kk.extInfo", JSON.stringify(this.extInfo), "project");
                     }
                 },
                 async beforeMount() {
                     this.allBundles = KKCore.getBundles();
                     let kkConf = await Editor.Profile.getProject(packageJSON.name, "kk", "project");
                     if (kkConf?.prefix) this.projPrefix = kkConf.prefix;
-                    if (kkConf?.codeCount) this.codeInfo = JSON.parse(kkConf.codeCount);
-                    if (kkConf?.resCount) this.extInfo = JSON.parse(kkConf.resCount);
+
+                    if (kkConf?.uiConfPath) this.uiConfPath = kkConf.uiConfPath;
+                    else if (kkConf?.prefix) this.uiConfPath = `assets/Boot/Scripts/${kkConf.prefix}GameUIConf.ts`;
+                    if (this.uiConfPath.length > 0) {
+                        KKUtils.url2pathAsy("db://" + this.uiConfPath).then((p) => {
+                            this.isConfPathExist = existsSync(p);
+                        });
+                    }
+
+                    if (kkConf?.codeInfo) this.codeInfo = JSON.parse(kkConf.codeInfo);
+                    if (kkConf?.extInfo) this.extInfo = JSON.parse(kkConf.extInfo);
                 }
             });
             app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ui-');

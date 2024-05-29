@@ -5,69 +5,78 @@
             <ui-button>UI创建</ui-button>
             <ui-button>项目统计</ui-button>
         </ui-tab>
-        <div v-if="curIdx == 0" style="margin: 20px; border-width: 1px;border-style: dashed;border-color: gray;padding: 10px;">
-            <div style="display: flex;flex-direction: row;">
-                <ui-icon color="primary" value="collapse-right"></ui-icon>&nbsp;<ui-label>项目前缀:&nbsp;</ui-label>
-                <ui-input placeholder="大写字母缩写" :value="projPrefix" :readonly="projPrefix.length > 0" @confirm="onSetPrefix($event.target.value.toUpperCase())"></ui-input>
-                <ui-button v-if="projPrefix.length > 0" type="primary" style="margin-left: 15px;" @confirm="onUnlockPrefix"><ui-icon value="unlock"></ui-icon>&nbsp;解锁</ui-button>
+        <div v-if="curIdx == 0">
+            <div style="margin: 20px; padding: 10px;border-width: 1px;border-style: dashed;border-color: gray;">
+                <div style="display: flex;flex-direction: row;">
+                    <ui-icon color="primary" value="collapse-right"></ui-icon>&nbsp;<ui-label>项目前缀:&nbsp;</ui-label>
+                    <ui-input placeholder="大写字母缩写" :value="projPrefix" :readonly="projPrefix.length > 0" @confirm="onSetPrefix($event.target.value.toUpperCase())"></ui-input>
+                    <ui-button v-if="projPrefix.length > 0 && !isConfPathExist" type="primary" style="margin-left: 15px;" @confirm="onUnlockPrefix"><ui-icon value="unlock"></ui-icon>&nbsp;解锁</ui-button>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-button type="primary" @confirm="onInitProj" :disabled="isConfPathExist"><ui-icon value="reset"></ui-icon>&nbsp;初始化项目并生成配置文件</ui-button>
+                </div>
             </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-button type="primary" @confirm="onInitProj"><ui-icon value="reset"></ui-icon>&nbsp;初始化项目</ui-button>
-            </div>
-            <br/>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-icon color="primary" value="directory"></ui-icon>&nbsp;<ui-label>新建Bundle:&nbsp;</ui-label>
-                <ui-input placeholder="Bundle Name" :value="newBundleName" @confirm="newBundleName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Bundle</span></ui-input>
-                <ui-label>&nbsp;&nbsp;优先级:&nbsp;</ui-label>
-                <ui-select :value="bundlePriority" @confirm="bundlePriority = Number($event.target.value)">
-                    <option value="1">1 (Game)</option>
-                    <option value="2">2</option>
-                    <option value="3">3 (Hall)</option>
-                    <option value="4">4</option>
-                    <option value="5">5 (Common)</option>
-                    <option value="6">6</option>
-                    <option value="7">7 (内置main)</option>
-                    <option value="8">8 (内置resources)</option>
-                    <option value="20">20 (内置start-scene)</option>
-                    <option value="21">21 (内置internal)</option>
-                </ui-select>
-                <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateBundle"><ui-icon value="extension"></ui-icon>&nbsp;创建</ui-button>
-            </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Layer:&nbsp;</ui-label>
-                <ui-input placeholder="Layer Name" :value="newLayerName" @confirm="newLayerName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Layer</span></ui-input>
-                <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
-                <ui-select :value="bundleChoice1" @confirm="bundleChoice1 = $event.target.value">
-                    <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
-                </ui-select>
-                <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateLayer"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
-            </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Popup:&nbsp;</ui-label>
-                <ui-input placeholder="Popup Name" :value="newPopupName" @confirm="newPopupName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Popup</span></ui-input>
-                <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
-                <ui-select :value="bundleChoice2" @confirm="bundleChoice2 = $event.target.value">
-                    <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
-                </ui-select>
-                <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePopup"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
-            </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Panel:&nbsp;</ui-label>
-                <ui-input placeholder="Panel Name" :value="newPanelName" @confirm="newPanelName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Panel</span></ui-input>
-                <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
-                <ui-select :value="bundleChoice3" @confirm="bundleChoice3 = $event.target.value">
-                    <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
-                </ui-select>
-                <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePanel"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
-            </div>
-            <div style="display: flex;flex-direction: row;margin-top: 10px;">
-                <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Widget:&nbsp;</ui-label>
-                <ui-input placeholder="Widget Name" :value="newWidgetName" @confirm="newWidgetName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Widget</span></ui-input>
-                <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
-                <ui-select :value="bundleChoice4" @confirm="bundleChoice4 = $event.target.value">
-                    <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
-                </ui-select>
-                <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateWidget"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+            <div style="margin: 20px; padding: 10px;border-width: 1px;border-style: dashed;border-color: gray;">
+                <div style="display: flex;flex-direction: row;">
+                    <ui-icon color="primary" value="line"></ui-icon>
+                    <ui-label style="color: #7E8EF1;">&nbsp;UI配置文件目录:&nbsp;</ui-label>
+                    <ui-label style="color: #adb8f8;">{{uiConfPath}}</ui-label>
+                    <ui-label v-if="!isConfPathExist">&nbsp;&nbsp;<ui-icon color="primary" value="warn"></ui-icon>文件不存在</ui-label>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-icon color="primary" value="directory"></ui-icon>&nbsp;<ui-label>新建Bundle:&nbsp;</ui-label>
+                    <ui-input placeholder="Bundle Name" :value="newBundleName" @confirm="newBundleName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Bundle</span></ui-input>
+                    <ui-label>&nbsp;&nbsp;优先级:&nbsp;</ui-label>
+                    <ui-select :value="bundlePriority" @confirm="bundlePriority = Number($event.target.value)">
+                        <option value="1">1 (Game)</option>
+                        <option value="2">2</option>
+                        <option value="3">3 (Hall)</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Common)</option>
+                        <option value="6">6</option>
+                        <option value="7">7 (内置main)</option>
+                        <option value="8">8 (内置resources)</option>
+                        <option value="20">20 (内置start-scene)</option>
+                        <option value="21">21 (内置internal)</option>
+                    </ui-select>
+                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateBundle"><ui-icon value="extension"></ui-icon>&nbsp;创建</ui-button>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Layer:&nbsp;</ui-label>
+                    <ui-input placeholder="Layer Name" :value="newLayerName" @confirm="newLayerName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Layer</span></ui-input>
+                    <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
+                    <ui-select :value="bundleChoice1" @confirm="bundleChoice1 = $event.target.value">
+                        <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateLayer"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Popup:&nbsp;</ui-label>
+                    <ui-input placeholder="Popup Name" :value="newPopupName" @confirm="newPopupName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Popup</span></ui-input>
+                    <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
+                    <ui-select :value="bundleChoice2" @confirm="bundleChoice2 = $event.target.value">
+                        <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePopup"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Panel:&nbsp;</ui-label>
+                    <ui-input placeholder="Panel Name" :value="newPanelName" @confirm="newPanelName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Panel</span></ui-input>
+                    <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
+                    <ui-select :value="bundleChoice3" @confirm="bundleChoice3 = $event.target.value">
+                        <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePanel"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                </div>
+                <div style="display: flex;flex-direction: row;margin-top: 10px;">
+                    <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Widget:&nbsp;</ui-label>
+                    <ui-input placeholder="Widget Name" :value="newWidgetName" @confirm="newWidgetName = $event.target.value"><span slot="prefix">{{projPrefix}}</span><span slot="suffix">Widget</span></ui-input>
+                    <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
+                    <ui-select :value="bundleChoice4" @confirm="bundleChoice4 = $event.target.value">
+                        <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateWidget"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                </div>
             </div>
         </div>
         <div v-else-if="curIdx == 1" style="margin: 20px; border-width: 1px;border-style: dashed;border-color: gray;padding: 10px;">
@@ -76,10 +85,11 @@
             </div>
             <div style="display: flex;flex-direction: row;margin-top: 10px;">
                 <ui-icon color="primary" value="code"></ui-icon>&nbsp;<ui-label>TS代码统计:</ui-label>
+                <ui-label>&nbsp;&nbsp;(更新于{{codeInfo.time}})</ui-label>
             </div>
             <div style="display: flex;flex-direction: row;flex-wrap: wrap;margin-top: 10px;background-color: rgb(31, 31, 31);color: rgb(255, 255, 255);padding: 10px;">
                 <div style="display: flex;flex-direction: row;justify-content: space-around;width: 100%;margin-top: 10px;">
-                    <div v-for="(one, index) in codeInfo" :key="index" style="display: flex;flex-direction: row;">
+                    <div v-for="(one, index) in codeInfo.result" :key="index" style="display: flex;flex-direction: row;">
                         <div style="background-color: #0e384d;width: 60px;text-align: center;">{{one.name}}</div>
                         <div style="background-color: #1B4242;width: 50px;text-align: center;">{{one.num}}</div>
                     </div>
@@ -92,9 +102,10 @@
 
             <div style="display: flex;flex-direction: row;margin-top: 10px;">
                 <ui-icon color="primary" value="database"></ui-icon>&nbsp;<ui-label>资源统计:</ui-label>
+                <ui-label>&nbsp;&nbsp;(更新于{{extInfo.time}})</ui-label>
             </div>
             <div style="display: flex;flex-direction: row;flex-wrap: wrap;margin-top: 10px;background-color: rgb(31, 31, 31);color: rgb(255, 255, 255);padding: 10px;">
-                <div v-for="(one, ext) in extInfo" style="display: flex;flex-direction: row;margin-right: 10px;margin-top: 10px;">
+                <div v-for="(one, ext) in extInfo.result" style="display: flex;flex-direction: row;margin-right: 10px;margin-top: 10px;">
                     <div style="background-color: #0e384d;width: 60px;text-align: center;">{{ext}}</div>
                     <div style="background-color: #1B4242;width: 50px;text-align: center;">{{one.num}}</div>
                     <div style="background-color: #5C8374;width: 60px;text-align: center;">{{(one.size / 1024 / 1024).toFixed(2) + 'M'}}</div>
