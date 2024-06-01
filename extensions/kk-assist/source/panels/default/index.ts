@@ -33,6 +33,7 @@ module.exports = Editor.Panel.define({
                         projPrefix: "",
                         uiConfPath: "",
                         isConfPathExist: false,
+                        initing: false,
 
                         newBundleName: "",
                         bundlePriority: 1,
@@ -63,14 +64,17 @@ module.exports = Editor.Panel.define({
                         this.projPrefix = "";
                     },
 
-                    onInitProj() {
+                    async onInitProj() {
                         if (this.projPrefix.length == 0) {
                             Editor.Dialog.warn("请先设置前缀!", {
                                 buttons: ["OK"]
                             });
                             return;
                         }
-                        KKCore.doInitProjAsy(this.projPrefix);
+                        this.initing = true;
+                        await KKCore.doInitProjAsy(this.projPrefix);
+                        this.initing = false;
+                        this.isConfPathExist = true;
                     },
 
                     async onCreateBundle() {

@@ -30,9 +30,11 @@ export default class KKCore {
             }
 
             await KKUtils.refreshResAsy("db://assets");
+            //刷新后，手动间隔，避免组件找不到
+            await KKUtils.sleepAsy(0.6);
 
-            await KKUtils.genSceneAsy("db://assets/Stage.scene");
-            await KKUtils.openSceneAsy("db://assets/Stage.scene");
+            await KKUtils.genSceneAsy("db://assets/Boot/Stage.scene");
+            await KKUtils.openSceneAsy("db://assets/Boot/Stage.scene");
             let rootInfo = await KKUtils.getSceneRootNodeInfoAsy();
             //@ts-ignore
             let nodeUuid: string = rootInfo.children[0].uuid;

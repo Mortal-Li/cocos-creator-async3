@@ -14,6 +14,7 @@
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
                     <ui-button type="primary" @confirm="onInitProj" :disabled="isConfPathExist"><ui-icon value="reset"></ui-icon>&nbsp;初始化项目并生成配置文件</ui-button>
+                    <ui-loading v-if="initing" style="margin-left: 15px;"></ui-loading>
                 </div>
             </div>
             <div style="margin: 20px; padding: 10px;border-width: 1px;border-style: dashed;border-color: gray;">
