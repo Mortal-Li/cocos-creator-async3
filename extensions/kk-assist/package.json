@@ -7,7 +7,8 @@
     "editor": ">=3.8.2",
     "scripts": {
         "preinstall": "node ./scripts/preinstall.js",
-        "build": "tsc"
+        "build": "tsc",
+        "sync-kk": "node ./scripts/sync-kk.js"
     },
     "description": "cocos-creator-async3开发高效助手",
     "main": "./dist/main.js",

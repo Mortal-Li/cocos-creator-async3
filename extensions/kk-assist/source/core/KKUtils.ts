@@ -1,6 +1,7 @@
 
 import { join } from 'path';
 import packageJSON from '../../package.json';
+import { readFileSync } from 'fs-extra';
 
 export default class KKUtils {
     static sleepAsy(t: number) {
@@ -40,5 +41,38 @@ export default class KKUtils {
      */
     static refreshResAsy(url: string) {
         return Editor.Message.request('asset-db', 'refresh-asset', url);
+    }
+
+    static genSceneAsy(url: string) {
+        return KKUtils.genAssetsAsy(url, "db://internal/default_file_content/scene-2d");
+    }
+
+    static async genAssetsAsy(targetUrl: string, templateUrl: string) {
+        let url = await Editor.Message.request('asset-db', 'generate-available-url', targetUrl);
+        let templatePath = await KKUtils.url2pathAsy(templateUrl);
+        let infoContent = readFileSync(templatePath).toString();
+
+        await Editor.Message.request('asset-db', 'create-asset', url, infoContent, {});
+        console.log(`gen ${targetUrl} successfully`);
+    }
+
+    static async openSceneAsy(url: string) {
+        let uuid = await KKUtils.url2uuidAsy(url);
+        await Editor.Message.request('scene', 'open-scene', uuid);
+    }
+
+    static saveSceneAsy() {
+        return Editor.Message.request('scene', 'save-scene');
+    }
+
+    static genCompAsy(nodeUuid: string, compName: string) {
+        return Editor.Message.request('scene', 'create-component', { 
+            uuid: nodeUuid,
+            component: compName
+        });
+    }
+
+    static getSceneRootNodeInfoAsy() {
+        return Editor.Message.request('scene', 'query-node-tree');
     }
 }

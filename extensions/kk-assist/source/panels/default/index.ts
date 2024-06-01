@@ -70,7 +70,7 @@ module.exports = Editor.Panel.define({
                             });
                             return;
                         }
-                        KKCore.doInitProj(this.projPrefix);
+                        KKCore.doInitProjAsy(this.projPrefix);
                     },
 
                     async onCreateBundle() {

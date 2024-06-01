@@ -1,20 +1,44 @@
 
-import { copyFileSync, existsSync, mkdirSync, outputJsonSync, readFileSync, readJsonSync, readdirSync, statSync, writeFileSync } from "fs-extra";
+import { copyFileSync, copySync, existsSync, mkdirSync, outputJsonSync, readFileSync, readJsonSync, readdirSync, renameSync, statSync, writeFileSync } from "fs-extra";
 import { extname, join } from "path";
 import KKUtils from "./KKUtils";
-import packageJSON from '../../package.json';
 import { hostname } from "os";
 
 export default class KKCore {
 
-    static doInitProj(pfx: string) {
+    static async doInitProjAsy(pfx: string) {
         let fwPath = join(Editor.Project.path, "assets", "framework");
         if (existsSync(fwPath)) {
             Editor.Dialog.warn("The project has been initialized!", {
                 buttons: ["OK"]
             });
         } else {
-            // todo
+            let dstPath = join(Editor.Project.path, "assets");
+
+            let srcPath = join(KKUtils.getPluginPath(), "template", "init");
+            let files = readdirSync(srcPath);
+            files.forEach((fn) => {
+                copySync(join(srcPath, fn), join(dstPath, fn));
+            });
+
+            let confPath = join(dstPath, "Boot", "Scripts", "GameUIConf.ts");
+            if (existsSync(confPath)) {
+                renameSync(confPath, confPath.replace("GameUIConf", pfx + "GameUIConf"));
+            } else {
+                console.error("Cannot find the GameUIConf.ts");
+                return;
+            }
+
+            await KKUtils.refreshResAsy("db://assets");
+
+            await KKUtils.genSceneAsy("db://assets/Stage.scene");
+            await KKUtils.openSceneAsy("db://assets/Stage.scene");
+            let rootInfo = await KKUtils.getSceneRootNodeInfoAsy();
+            //@ts-ignore
+            let nodeUuid: string = rootInfo.children[0].uuid;
+            await KKUtils.genCompAsy(nodeUuid, "Adapter");
+            await KKUtils.genCompAsy(nodeUuid, "Stage");
+            await KKUtils.saveSceneAsy();
         }
     }
 

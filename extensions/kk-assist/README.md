@@ -1,8 +1,3 @@
-# Project Title
-
-An extension that shows how to open and communicate with the panel through messages and menus.
-The panel is based on Vue3.x.
-
 ## Development Environment
 
 Node.js
@@ -14,5 +9,7 @@ Node.js
 npm install
 # build
 npm run build
+# sync-kk Synchronize project framework to plugin framework
+npm run sync-kk
 ```
 
