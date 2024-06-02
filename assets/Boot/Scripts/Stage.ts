@@ -1,5 +1,5 @@
 /**
- * 
+ * 场景挂载脚本
  * @author Mortal-Li
  * @created Mon Apr 15 2024 12:17:18 GMT+0800 (中国标准时间)
  */
