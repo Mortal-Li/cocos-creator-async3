@@ -153,13 +153,17 @@ module.exports = Editor.Panel.define({
                 async beforeMount() {
                     this.allBundles = KKCore.getBundles();
                     let kkConf = await Editor.Profile.getProject(packageJSON.name, "kk", "project");
-                    if (kkConf?.prefix) this.projPrefix = kkConf.prefix;
+                    if (kkConf?.prefix) {
+                        this.projPrefix = kkConf.prefix;
+                        this.uiConfPath = `assets/Boot/Scripts/${kkConf.prefix}GameUIConf.ts`;
+                    }
 
-                    if (kkConf?.uiConfPath) this.uiConfPath = kkConf.uiConfPath;
-                    else if (kkConf?.prefix) this.uiConfPath = `assets/Boot/Scripts/${kkConf.prefix}GameUIConf.ts`;
                     if (this.uiConfPath.length > 0) {
                         KKUtils.url2pathAsy("db://" + this.uiConfPath).then((p) => {
-                            this.isConfPathExist = existsSync(p);
+                            if (existsSync(p)) {
+                                this.isConfPathExist = true;
+                                KKCore.projPrefix = kkConf.prefix;
+                            }
                         });
                     }
 

@@ -3,3 +3,10 @@
  * @author Mortal-Li
  * @created 2024-05-31 16:52
  */
+
+import { IUIConfig } from "../../framework/ui/UIConfig";
+
+export const KKBundleConf = {
+	Load: "KKLoadBundle"
+	//@bundle
+};

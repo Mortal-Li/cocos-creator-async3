@@ -6,6 +6,8 @@ import { hostname } from "os";
 
 export default class KKCore {
 
+    static projPrefix: string = "";
+
     static async doInitProjAsy(pfx: string) {
         let fwPath = join(Editor.Project.path, "assets", "framework");
         if (existsSync(fwPath)) {
@@ -28,6 +30,7 @@ export default class KKCore {
                 console.error("Cannot find the GameUIConf.ts");
                 return;
             }
+            KKCore.projPrefix = pfx;
 
             await KKUtils.refreshResAsy("db://assets");
             //刷新后，手动间隔，避免组件找不到
@@ -86,6 +89,17 @@ export default class KKCore {
                 mkdirSync(join(bundlePath, "Scripts"));
                 mkdirSync(join(bundlePath, "Textures"));
                 await KKUtils.refreshResAsy(bundlePathUrl);
+
+                let confUrl = KKUtils.getConfUrl(KKCore.projPrefix);
+                let confPath = await KKUtils.url2pathAsy(confUrl);
+                let confStr = readFileSync(confPath, 'utf-8');
+                if (confStr.indexOf("@bundle") == -1) {
+                    confStr += `\nexport const ${KKCore.projPrefix}BundleConf = {\n\t//@bundle\n};`;
+                }
+                confStr = confStr.replace("//@bundle", `${KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle")}: "${bundleName}"\n\t//@bundle`);
+                writeFileSync(confPath, confStr);
+                await KKUtils.refreshResAsy(confUrl);
+
                 console.log(bundleName + " created!");
                 return true;
             } else {

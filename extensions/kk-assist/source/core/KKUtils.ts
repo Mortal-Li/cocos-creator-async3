@@ -16,6 +16,14 @@ export default class KKUtils {
         return join(Editor.Project.path, "extensions", packageJSON.name);
     }
 
+    static getConfUrl(pfx: string) {
+        return `db://assets/Boot/Scripts/${pfx}GameUIConf.ts`;
+    }
+
+    static removePfxAndSfx(s: string, pfx: string, sfx: string) {
+        return s.substring(pfx.length, s.length - sfx.length);
+    }
+
     static url2pathAsy(url: string) {
         return new Promise<string>((resolve, reject) => {
             Editor.Message.request('asset-db', 'query-path', url)
