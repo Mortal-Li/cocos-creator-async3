@@ -49,6 +49,12 @@
                     <ui-select :value="bundleChoice1" @confirm="bundleChoice1 = $event.target.value">
                         <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
                     </ui-select>
+                    <ui-label>&nbsp;&nbsp;缓存模式:&nbsp;</ui-label>
+                    <ui-select :value="cacheMode1" @confirm="cacheMode1 = $event.target.value">
+                        <option value=0>不缓存</option>
+                        <option value=1>缓存</option>
+                        <option value=2>常驻</option>
+                    </ui-select>
                     <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateLayer"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
@@ -57,6 +63,11 @@
                     <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
                     <ui-select :value="bundleChoice2" @confirm="bundleChoice2 = $event.target.value">
                         <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-label>&nbsp;&nbsp;缓存模式:&nbsp;</ui-label>
+                    <ui-select :value="cacheMode2" @confirm="cacheMode2 = $event.target.value">
+                        <option value=0>不缓存</option>
+                        <option value=1>缓存</option>
                     </ui-select>
                     <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePopup"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
                 </div>
@@ -67,6 +78,11 @@
                     <ui-select :value="bundleChoice3" @confirm="bundleChoice3 = $event.target.value">
                         <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
                     </ui-select>
+                    <ui-label>&nbsp;&nbsp;缓存模式:&nbsp;</ui-label>
+                    <ui-select :value="cacheMode3" @confirm="cacheMode3 = $event.target.value">
+                        <option value=0>不缓存</option>
+                        <option value=1>缓存</option>
+                    </ui-select>
                     <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePanel"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
@@ -75,6 +91,11 @@
                     <ui-label>&nbsp;&nbsp;属于:&nbsp;</ui-label>
                     <ui-select :value="bundleChoice4" @confirm="bundleChoice4 = $event.target.value">
                         <option v-for="(item, index) in allBundles" :key="index">{{item}}</option>
+                    </ui-select>
+                    <ui-label>&nbsp;&nbsp;缓存模式:&nbsp;</ui-label>
+                    <ui-select :value="cacheMode4" @confirm="cacheMode4 = $event.target.value">
+                        <option value=0>不缓存</option>
+                        <option value=1>缓存</option>
                     </ui-select>
                     <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateWidget"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
                 </div>

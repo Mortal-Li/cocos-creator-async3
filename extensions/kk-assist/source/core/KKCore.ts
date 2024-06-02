@@ -96,7 +96,7 @@ export default class KKCore {
                 if (confStr.indexOf("@bundle") == -1) {
                     confStr += `\nexport const ${KKCore.projPrefix}BundleConf = {\n\t//@bundle\n};`;
                 }
-                confStr = confStr.replace("//@bundle", `${KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle")}: "${bundleName}"\n\t//@bundle`);
+                confStr = confStr.replace("//@bundle", `${KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle")}: "${bundleName}",\n\t//@bundle`);
                 writeFileSync(confPath, confStr);
                 await KKUtils.refreshResAsy(confUrl);
 
@@ -109,20 +109,51 @@ export default class KKCore {
         }
     }
 
-    static doCreateLayer(layerName: string, bundleName: string) {
-        KKCore.genUIUnit("Layer", layerName, bundleName);
+    static doCreateLayer(layerName: string, bundleName: string, cacheMode: number) {
+        KKCore.genUIUnit("Layer", layerName, bundleName).then(async (isOK) => {
+            if (isOK) {
+                let confUrl = KKUtils.getConfUrl(KKCore.projPrefix);
+                let confPath = await KKUtils.url2pathAsy(confUrl);
+                let confStr = readFileSync(confPath, 'utf-8');
+                if (confStr.indexOf("@layer") == -1) {
+                    confStr += `\nexport const ${KKCore.projPrefix}LayerConf = {\n\t//@layer\n};\n`;
+                }
+
+                confStr = confStr.replace("//@layer", `${KKUtils.removePfxAndSfx(layerName, KKCore.projPrefix, "Layer")}: <IUIConfig> {
+        bundle: ${KKCore.projPrefix}BundleConf.${KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle")},
+        name: "${layerName}",${cacheMode != 0 ? (cacheMode == 1 ? "\n\t\tcacheMode: UICacheMode.Cache" : "\n\t\tcacheMode: UICacheMode.Stay") : ""}
+    },
+
+    //@layer`);
+                
+                writeFileSync(confPath, confStr);
+                await KKUtils.refreshResAsy(confUrl);
+            }
+        });
     }
 
-    static doCreatePopup(popupName: string, bundleName: string) {
-        KKCore.genUIUnit("Popup", popupName, bundleName);
+    static doCreatePopup(popupName: string, bundleName: string, cacheMode: number) {
+        KKCore.genUIUnit("Popup", popupName, bundleName).then((isOK) => {
+            if (isOK) {
+                
+            }
+        });
     }
 
-    static doCreatePanel(panelName: string, bundleName: string) {
-        KKCore.genUIUnit("Panel", panelName, bundleName);
+    static doCreatePanel(panelName: string, bundleName: string, cacheMode: number) {
+        KKCore.genUIUnit("Panel", panelName, bundleName).then((isOK) => {
+            if (isOK) {
+                
+            }
+        });
     }
 
-    static doCreateWidget(widgetName: string, bundleName: string) {
-        KKCore.genUIUnit("Widget", widgetName, bundleName);
+    static doCreateWidget(widgetName: string, bundleName: string, cacheMode: number) {
+        KKCore.genUIUnit("Widget", widgetName, bundleName).then((isOK) => {
+            if (isOK) {
+                
+            }
+        });
     }
 
     static async genUIUnit(typeName: string, uiName: string, bundleName: string) {
@@ -141,6 +172,7 @@ export default class KKCore {
             Editor.Dialog.warn(uiName + " already exists", {
                 buttons: ["OK"]
             });
+            return false;
         } else {
             let tsUrl = bundleUrl + "/Scripts/" + uiName + ".ts";
             let tsPath = await KKUtils.url2pathAsy(tsUrl);
@@ -169,6 +201,7 @@ export default class KKCore {
             outputJsonSync(prefabPath, prefabStr);
             await KKUtils.refreshResAsy(prefabUrl);
             console.log(`${uiName} created!`);
+            return true;
         }
     }
 

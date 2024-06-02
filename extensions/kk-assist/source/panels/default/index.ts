@@ -39,12 +39,16 @@ module.exports = Editor.Panel.define({
                         bundlePriority: 1,
                         newLayerName: "",
                         bundleChoice1: "",
+                        cacheMode1: 0,
                         newPopupName: "",
                         bundleChoice2: "",
+                        cacheMode2: 0,
                         newPanelName: "",
                         bundleChoice3: "",
+                        cacheMode3: 0,
                         newWidgetName: "",
                         bundleChoice4: "",
+                        cacheMode4: 0,
 
                         isCodeCounting: false,
                         codeInfo: {},
@@ -96,28 +100,28 @@ module.exports = Editor.Panel.define({
                         this.newLayerName = this.newLayerName.trim();
                         if (this.newLayerName.length == 0) return;
                         if (this.bundleChoice1.length == 0) return;
-                        KKCore.doCreateLayer(this.projPrefix + this.newLayerName + "Layer", this.bundleChoice1);
+                        KKCore.doCreateLayer(this.projPrefix + this.newLayerName + "Layer", this.bundleChoice1, this.cacheMode1);
                     },
 
                     onCreatePopup() {
                         this.newPopupName = this.newPopupName.trim();
                         if (this.newPopupName.length == 0) return;
                         if (this.bundleChoice2.length == 0) return;
-                        KKCore.doCreatePopup(this.projPrefix + this.newPopupName + "Popup", this.bundleChoice2);
+                        KKCore.doCreatePopup(this.projPrefix + this.newPopupName + "Popup", this.bundleChoice2, this.cacheMode2);
                     },
 
                     onCreatePanel() {
                         this.newPanelName = this.newPanelName.trim();
                         if (this.newPanelName.length == 0) return;
                         if (this.bundleChoice3.length == 0) return;
-                        KKCore.doCreatePanel(this.projPrefix + this.newPanelName + "Panel", this.bundleChoice3);
+                        KKCore.doCreatePanel(this.projPrefix + this.newPanelName + "Panel", this.bundleChoice3, this.cacheMode3);
                     },
 
                     onCreateWidget() {
                         this.newWidgetName = this.newWidgetName.trim();
                         if (this.newWidgetName.length == 0) return;
                         if (this.bundleChoice4.length == 0) return;
-                        KKCore.doCreateWidget(this.projPrefix + this.newWidgetName + "Widget", this.bundleChoice4);
+                        KKCore.doCreateWidget(this.projPrefix + this.newWidgetName + "Widget", this.bundleChoice4, this.cacheMode4);
                     },
 
                     onCodeCount() {
