@@ -40,7 +40,8 @@
                         <option value="20">20 (内置start-scene)</option>
                         <option value="21">21 (内置internal)</option>
                     </ui-select>
-                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateBundle"><ui-icon value="extension"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-button v-if="isWhichCreating != 0" type="primary" style="margin-left: 15px;" @confirm="onCreateBundle"><ui-icon value="extension"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-loading v-if="isWhichCreating == 0" style="margin-left: 15px;"></ui-loading>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
                     <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Layer:&nbsp;</ui-label>
@@ -55,7 +56,8 @@
                         <option value=1>缓存</option>
                         <option value=2>常驻</option>
                     </ui-select>
-                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateLayer"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-button v-if="isWhichCreating != 1" type="primary" style="margin-left: 15px;" @confirm="onCreateLayer"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-loading v-if="isWhichCreating == 1" style="margin-left: 15px;"></ui-loading>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
                     <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Popup:&nbsp;</ui-label>
@@ -69,7 +71,8 @@
                         <option value=0>不缓存</option>
                         <option value=1>缓存</option>
                     </ui-select>
-                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePopup"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-button v-if="isWhichCreating != 2" type="primary" style="margin-left: 15px;" @confirm="onCreatePopup"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-loading v-if="isWhichCreating == 2" style="margin-left: 15px;"></ui-loading>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
                     <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Panel:&nbsp;</ui-label>
@@ -83,7 +86,8 @@
                         <option value=0>不缓存</option>
                         <option value=1>缓存</option>
                     </ui-select>
-                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreatePanel"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-button v-if="isWhichCreating != 3" type="primary" style="margin-left: 15px;" @confirm="onCreatePanel"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-loading v-if="isWhichCreating == 3" style="margin-left: 15px;"></ui-loading>
                 </div>
                 <div style="display: flex;flex-direction: row;margin-top: 10px;">
                     <ui-icon color="primary" value="prefab"></ui-icon>&nbsp;<ui-label>新建Widget:&nbsp;</ui-label>
@@ -97,7 +101,8 @@
                         <option value=0>不缓存</option>
                         <option value=1>缓存</option>
                     </ui-select>
-                    <ui-button type="primary" style="margin-left: 15px;" @confirm="onCreateWidget"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-button v-if="isWhichCreating != 4" type="primary" style="margin-left: 15px;" @confirm="onCreateWidget"><ui-icon value="assets"></ui-icon>&nbsp;创建</ui-button>
+                    <ui-loading v-if="isWhichCreating == 4" style="margin-left: 15px;"></ui-loading>
                 </div>
             </div>
         </div>

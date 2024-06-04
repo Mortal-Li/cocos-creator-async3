@@ -35,6 +35,7 @@ module.exports = Editor.Panel.define({
                         isConfPathExist: false,
                         initing: false,
 
+                        isWhichCreating: -1,
                         newBundleName: "",
                         bundlePriority: 1,
                         newLayerName: "",
@@ -82,6 +83,7 @@ module.exports = Editor.Panel.define({
                     },
 
                     async onCreateBundle() {
+                        if (this.isWhichCreating >= 0) return;
                         if (!this.isConfPathExist) {
                             Editor.Dialog.warn("UI配置文件不存在!", {
                                 buttons: ["OK"]
@@ -91,37 +93,53 @@ module.exports = Editor.Panel.define({
 
                         this.newBundleName = this.newBundleName.trim();
                         if (this.newBundleName.length == 0) return;
+                        this.isWhichCreating = 0;
                         let bundleName = this.projPrefix + this.newBundleName + "Bundle";
                         let isOK = await KKCore.doCreateBundle(bundleName, this.bundlePriority);
                         if (isOK) this.allBundles.push(bundleName);
+                        this.isWhichCreating = -1;
                     },
 
                     onCreateLayer() {
+                        if (this.isWhichCreating >= 0) return;
                         this.newLayerName = this.newLayerName.trim();
                         if (this.newLayerName.length == 0) return;
                         if (this.bundleChoice1.length == 0) return;
-                        KKCore.doCreateLayer(this.projPrefix + this.newLayerName + "Layer", this.bundleChoice1, this.cacheMode1);
+                        this.isWhichCreating = 1;
+                        KKCore.doCreateLayer(this.projPrefix + this.newLayerName + "Layer", this.bundleChoice1, this.cacheMode1).then(() => {
+                            this.isWhichCreating = -1;
+                        });
                     },
 
                     onCreatePopup() {
+                        if (this.isWhichCreating >= 0) return;
                         this.newPopupName = this.newPopupName.trim();
                         if (this.newPopupName.length == 0) return;
                         if (this.bundleChoice2.length == 0) return;
-                        KKCore.doCreatePopup(this.projPrefix + this.newPopupName + "Popup", this.bundleChoice2, this.cacheMode2);
+                        this.isWhichCreating = 2;
+                        KKCore.doCreatePopup(this.projPrefix + this.newPopupName + "Popup", this.bundleChoice2, this.cacheMode2).then(() => {
+                            this.isWhichCreating = -1;
+                        });
                     },
 
                     onCreatePanel() {
                         this.newPanelName = this.newPanelName.trim();
                         if (this.newPanelName.length == 0) return;
                         if (this.bundleChoice3.length == 0) return;
-                        KKCore.doCreatePanel(this.projPrefix + this.newPanelName + "Panel", this.bundleChoice3, this.cacheMode3);
+                        this.isWhichCreating = 3;
+                        KKCore.doCreatePanel(this.projPrefix + this.newPanelName + "Panel", this.bundleChoice3, this.cacheMode3).then(() => {
+                            this.isWhichCreating = -1;
+                        });
                     },
 
                     onCreateWidget() {
                         this.newWidgetName = this.newWidgetName.trim();
                         if (this.newWidgetName.length == 0) return;
                         if (this.bundleChoice4.length == 0) return;
-                        KKCore.doCreateWidget(this.projPrefix + this.newWidgetName + "Widget", this.bundleChoice4, this.cacheMode4);
+                        this.isWhichCreating = 4;
+                        KKCore.doCreateWidget(this.projPrefix + this.newWidgetName + "Widget", this.bundleChoice4, this.cacheMode4).then(() => {
+                            this.isWhichCreating = -1;
+                        });
                     },
 
                     onCodeCount() {

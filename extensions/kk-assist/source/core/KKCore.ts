@@ -109,51 +109,63 @@ export default class KKCore {
         }
     }
 
-    static doCreateLayer(layerName: string, bundleName: string, cacheMode: number) {
-        KKCore.genUIUnit("Layer", layerName, bundleName).then(async (isOK) => {
-            if (isOK) {
-                let confUrl = KKUtils.getConfUrl(KKCore.projPrefix);
-                let confPath = await KKUtils.url2pathAsy(confUrl);
-                let confStr = readFileSync(confPath, 'utf-8');
-                if (confStr.indexOf("@layer") == -1) {
-                    confStr += `\nexport const ${KKCore.projPrefix}LayerConf = {\n\t//@layer\n};\n`;
-                }
+    static async doCreateLayer(layerName: string, bundleName: string, cacheMode: number) {
+        let isOK = await KKCore.genUIUnit("Layer", layerName, bundleName);
+        if (isOK) {
+            let bdl = KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle");
+            let tag = "@layer";
+            let caches = cacheMode != 0 ? (cacheMode == 1 ? "\n\t\tcacheMode: UICacheMode.Cache" : "\n\t\tcacheMode: UICacheMode.Stay") : "";
+            await KKCore.genUIConf("Layer", layerName, bdl, tag, caches);
+        }
+    }
 
-                confStr = confStr.replace("//@layer", `${KKUtils.removePfxAndSfx(layerName, KKCore.projPrefix, "Layer")}: <IUIConfig> {
-        bundle: ${KKCore.projPrefix}BundleConf.${KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle")},
-        name: "${layerName}",${cacheMode != 0 ? (cacheMode == 1 ? "\n\t\tcacheMode: UICacheMode.Cache" : "\n\t\tcacheMode: UICacheMode.Stay") : ""}
+    static async doCreatePopup(popupName: string, bundleName: string, cacheMode: number) {
+        let isOK = await KKCore.genUIUnit("Popup", popupName, bundleName);
+        if (isOK) {
+            let bdl = KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle");
+            let tag = `@${bdl.toLowerCase()}_popup`;
+            let caches = cacheMode == 0 ? "" : "\n\t\tcacheMode: UICacheMode.Cache";
+            await KKCore.genUIConf("Popup", popupName, bdl, tag, caches);
+        }
+    }
+
+    static async doCreatePanel(panelName: string, bundleName: string, cacheMode: number) {
+        let isOK = await KKCore.genUIUnit("Panel", panelName, bundleName);
+        if (isOK) {
+            let bdl = KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle");
+            let tag = `@${bdl.toLowerCase()}_Panel`;
+            let caches = cacheMode == 0 ? "" : "\n\t\tcacheMode: UICacheMode.Cache";
+            await KKCore.genUIConf("Panel", panelName, bdl, tag, caches);
+        }
+    }
+
+    static async doCreateWidget(widgetName: string, bundleName: string, cacheMode: number) {
+        let isOK = await KKCore.genUIUnit("Widget", widgetName, bundleName);
+        if (isOK) {
+            let bdl = KKUtils.removePfxAndSfx(bundleName, KKCore.projPrefix, "Bundle");
+            let tag = `@${bdl.toLowerCase()}_Widget`;
+            let caches = cacheMode == 0 ? "" : "\n\t\tcacheMode: UICacheMode.Cache";
+            await KKCore.genUIConf("Widget", widgetName, bdl, tag, caches);
+        }
+    }
+
+    static async genUIConf(typeName: string, uiName: string, bdl: string, tag: string, cacheContent: string) {
+        let confUrl = KKUtils.getConfUrl(KKCore.projPrefix);
+        let confPath = await KKUtils.url2pathAsy(confUrl);
+        let confStr = readFileSync(confPath, 'utf-8');
+        if (confStr.indexOf(tag) == -1) {
+            confStr += `\nexport const ${KKCore.projPrefix + (typeName == "Layer" ? "" : bdl)}${typeName}Conf = {\n\t//${tag}\n};\n`;
+        }
+
+        confStr = confStr.replace("//" + tag, `${KKUtils.removePfxAndSfx(uiName, KKCore.projPrefix, typeName)}: <IUIConfig> {
+        bundle: ${KKCore.projPrefix}BundleConf.${bdl},
+        name: "${uiName}",${cacheContent}
     },
 
-    //@layer`);
-                
-                writeFileSync(confPath, confStr);
-                await KKUtils.refreshResAsy(confUrl);
-            }
-        });
-    }
+    //${tag}`);
 
-    static doCreatePopup(popupName: string, bundleName: string, cacheMode: number) {
-        KKCore.genUIUnit("Popup", popupName, bundleName).then((isOK) => {
-            if (isOK) {
-                
-            }
-        });
-    }
-
-    static doCreatePanel(panelName: string, bundleName: string, cacheMode: number) {
-        KKCore.genUIUnit("Panel", panelName, bundleName).then((isOK) => {
-            if (isOK) {
-                
-            }
-        });
-    }
-
-    static doCreateWidget(widgetName: string, bundleName: string, cacheMode: number) {
-        KKCore.genUIUnit("Widget", widgetName, bundleName).then((isOK) => {
-            if (isOK) {
-                
-            }
-        });
+        writeFileSync(confPath, confStr);
+        await KKUtils.refreshResAsy(confUrl);
     }
 
     static async genUIUnit(typeName: string, uiName: string, bundleName: string) {
