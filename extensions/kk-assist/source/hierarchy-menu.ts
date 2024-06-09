@@ -74,9 +74,10 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
             }
         });
     });
+
     return [
         {
-            label: "快速绑定",
+            label: "快速绑定到脚本",
             submenu: [
                 {
                     label: "节点",
