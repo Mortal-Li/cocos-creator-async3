@@ -34,6 +34,10 @@ export default class KKUtils {
         });
     }
 
+    static uuid2pathAsy(uuid: string) {
+        return KKUtils.url2pathAsy(uuid);
+    }
+
     static url2uuidAsy(url: string) {
         return new Promise<string>((resolve, reject) => {
             Editor.Message.request('asset-db', 'query-uuid', url)
@@ -47,8 +51,8 @@ export default class KKUtils {
     /**
      * 如果有嵌套资源，子资源要在后面更新，否则编辑器不显示，需要手动刷新
      */
-    static refreshResAsy(url: string) {
-        return Editor.Message.request('asset-db', 'refresh-asset', url);
+    static refreshResAsy(urlOrUuid: string) {
+        return Editor.Message.request('asset-db', 'refresh-asset', urlOrUuid);
     }
 
     static genSceneAsy(url: string) {
@@ -82,5 +86,22 @@ export default class KKUtils {
 
     static getSceneRootNodeInfoAsy() {
         return Editor.Message.request('scene', 'query-node-tree');
+    }
+
+    static getNodeInfoAsy(nodeUuid: string) {
+        return Editor.Message.request('scene', 'query-node', nodeUuid);
+    }
+
+    static setPropertyAsy(scriptNodeUuid: string, scriptOrder: number, propName: string, propType: string, propUUid: string) {
+        return Editor.Message.request('scene', 'set-property', {
+            uuid: scriptNodeUuid,
+            path: `__comps__.${scriptOrder}.${propName}`,
+            dump: {
+                type: propType,
+                value: {
+                    uuid: propUUid,
+                },
+            },
+        });
     }
 }

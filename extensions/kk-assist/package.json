@@ -42,6 +42,12 @@
                 "message": "open-panel"
             }
         ],
+        "hierarchy": {
+            "menu": {
+                "methods": "./dist/hierarchy-menu.js",
+                "nodeMenu": "onNodeMenu"
+            }
+        },
         "messages": {
             "open-panel": {
                 "methods": [

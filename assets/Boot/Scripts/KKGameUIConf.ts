@@ -10,3 +10,12 @@ export const KKBundleConf = {
 	Load: "KKLoadBundle",
 	//@bundle
 };
+
+export const KKLayerConf = {
+	Load: <IUIConfig> {
+        bundle: KKBundleConf.Load,
+        name: "KKLoadLayer",
+    },
+
+    //@layer
+};

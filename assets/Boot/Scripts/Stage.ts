@@ -6,6 +6,7 @@
 
 import { _decorator, Component, log, Node } from 'cc';
 import kk from '../../framework/kk';
+import { KKLayerConf } from './KKGameUIConf';
 const { ccclass, property } = _decorator;
 
 @ccclass('Stage')
@@ -16,7 +17,8 @@ export class Stage extends Component {
     }
 
     start() {
-        
+        kk.init();
+        kk.uiMgr.goLayerAsync(KKLayerConf.Load);
     }
     
 }

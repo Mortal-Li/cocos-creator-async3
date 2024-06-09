@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
 export class Stage extends Component {
 
     onLoad() {
-        
+        kk.init();
     }
 
     start() {
