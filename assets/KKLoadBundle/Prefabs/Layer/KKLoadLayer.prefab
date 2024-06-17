@@ -170,13 +170,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 138,
-      "g": 215,
-      "b": 252,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941",
+      "__uuid__": "a80e6489-c02a-4187-a7a4-4780e9ed4288@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -342,9 +342,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 240,
-      "g": 217,
-      "b": 51,
+      "r": 167,
+      "g": 248,
+      "b": 255,
       "a": 255
     },
     "_string": "CocosCreatorAsync3\nkk-assist",
@@ -564,8 +564,8 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 56,
-      "g": 143,
+      "r": 187,
+      "g": 56,
       "b": 238,
       "a": 255
     },
@@ -686,8 +686,8 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 46,
-      "g": 119,
+      "r": 176,
+      "g": 46,
       "b": 187,
       "a": 255
     },

@@ -48,6 +48,12 @@
                 "nodeMenu": "onNodeMenu"
             }
         },
+        "assets": {
+            "menu": {
+                "methods": "./dist/assets-menu.js",
+                "assetMenu": "onAssetMenu"
+            }
+        },
         "messages": {
             "open-panel": {
                 "methods": [
