@@ -69,7 +69,7 @@ export class SpriteNumber extends Component {
 
     private getOne(): Sprite {
         if (this.ndPool.size() == 0) {
-            return (new Node()).addComponent(Sprite);
+            return CocosHelper.addSprite(new Node(), { spriteFrame: null });
         } else {
             return this.ndPool.get().getComponent(Sprite);
         }

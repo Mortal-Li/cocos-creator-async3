@@ -8,6 +8,7 @@ import { IUIConfig, UICacheMode } from "../../framework/ui/UIConfig";
 
 export const KKBundleConf = {
 	Load: "KKLoadBundle",
+	Hall: "KKHallBundle",
 	//@bundle
 };
 
@@ -15,6 +16,12 @@ export const KKLayerConf = {
 	Load: <IUIConfig> {
         bundle: KKBundleConf.Load,
         name: "KKLoadLayer",
+    },
+
+    Hall: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKHallLayer",
+		cacheMode: UICacheMode.Stay
     },
 
     //@layer
