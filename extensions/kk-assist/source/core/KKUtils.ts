@@ -92,6 +92,10 @@ export default class KKUtils {
         return Editor.Message.request('scene', 'query-node', nodeUuid);
     }
 
+    static getCompInfoAsy(compUuid: string) {
+        return Editor.Message.request('scene', 'query-component', compUuid);
+    }
+
     static setPropertyAsy(scriptNodeUuid: string, scriptOrder: number, propName: string, propType: string, propUUid: string) {
         return Editor.Message.request('scene', 'set-property', {
             uuid: scriptNodeUuid,

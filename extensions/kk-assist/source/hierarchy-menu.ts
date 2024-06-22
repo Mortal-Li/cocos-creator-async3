@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "fs-extra";
 import KKUtils from "./core/KKUtils";
+import path from "path";
 
 function getPropCode(typeName: string, propName: string) {
     return `
@@ -47,23 +48,37 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
                     importType = propTypeName;
                 } else if (propType.startsWith("sp.") || propType.startsWith("dragonBones.")) {
                     importType = propType.split('.')[0];
-                } else {
-                    console.warn(`Unsupport ${propType}`);
-                    return;
                 }
-                let propCode = getPropCode(propTypeName, propName);
 
                 let tsStr = readFileSync(scriptPath, "utf-8");
+                if (tsStr.includes(`private ${propName}: ${propTypeName}`)) {
+                    console.warn(`${propName}: ${propTypeName} has bound!`);
+                    return;
+                }
+
                 let matchRst = tsStr.match(/ extends .*?{/)
                 if (!matchRst) {
                     console.log("reg match failed");
                     return;
                 }
+                let propCode = getPropCode(propTypeName, propName);
                 tsStr = tsStr.replace(matchRst[0], matchRst[0] + '\n' + propCode);
-                matchRst = tsStr.match(/import .*?}/);
-                if (matchRst) {
-                    if (!matchRst[0].includes(importType)) {
+
+                if (importType.length > 0) {
+                    matchRst = tsStr.match(/import .*?} from 'cc';/);
+                    if (matchRst && !matchRst[0].includes(importType)) {
                         tsStr = tsStr.replace(" } from 'cc'", `, ${importType} } from 'cc'`);
+                    }
+                } else {
+                    if (!tsStr.includes(`import { ${propTypeName} }`)) {
+                        matchRst = tsStr.match(/const { ccclass, .*?;/);
+                        if (matchRst) {
+                            let compInfo = await KKUtils.getCompInfoAsy(one.value) as any;
+                            let compPath = await KKUtils.uuid2pathAsy(Editor.Utils.UUID.decompressUUID(compInfo.cid));
+                            let rlPath = path.relative(path.dirname(scriptPath), compPath);
+                            rlPath = rlPath.replace(/\.\w+$/, '').replace(/\\/g, '/');
+                            tsStr = tsStr.replace(matchRst[0], `import { ${propTypeName} } from '${rlPath}';` + '\n' + matchRst[0]);
+                        }
                     }
                 }
 
