@@ -9,6 +9,7 @@ import { IUIConfig, UICacheMode } from "../../framework/ui/UIConfig";
 export const KKBundleConf = {
 	Load: "KKLoadBundle",
 	Hall: "KKHallBundle",
+	Common: "KKCommonBundle",
 	//@bundle
 };
 
@@ -25,4 +26,14 @@ export const KKLayerConf = {
     },
 
     //@layer
+};
+
+export const KKCommonPopupConf = {
+	Common: <IUIConfig> {
+        bundle: KKBundleConf.Common,
+        name: "KKCommonPopup",
+		cacheMode: UICacheMode.Cache
+    },
+
+    //@common_popup
 };
