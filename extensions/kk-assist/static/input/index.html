@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+        :root {
+            /* 主颜色 */
+            --main-color: #ffffff;
+            /* 文本颜色 */
+            --font-color: #333333;
+            /* 强调色 */
+            --accent-color: #2e88fb;
+            /* 边框调色 */
+            --border-color: #bdbdbd;
+            /* 按钮激活颜色 */
+            --btn-active-color: #0060dd;
+            /* 错误颜色 */
+            --error-color: #ff3030;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            padding: 15px 0 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        .layout {
+            width: 500px;
+        }
+
+        .search {
+            width: 500px;
+            height: 50px;
+            display: inline-flex;
+            border-radius: 8px;
+            box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.25);
+        }
+
+        .search .input {
+            width: 420px;
+            background-color: var(--main-color);
+            padding: 0 0 0 18px;
+            border: 1px solid var(--border-color);
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            color: var(--font-color);
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .search .input:focus {
+            outline: none;
+        }
+
+        .search .input-error {
+            animation: inputError 0.5s ease;
+        }
+
+        @keyframes inputError {
+            0%,
+            50%,
+            100% {
+                color: var(--font-color);
+            }
+            25%,
+            75% {
+                color: var(--error-color);
+            }
+        }
+
+        /* 按钮 */
+        .search .btn {
+            width: 80px;
+            margin: 0;
+            padding: 0;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 0 8px 8px 0;
+            color: var(--main-color);
+            font-size: 20px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        /* 按钮:点击 */
+        .search .btn:active {
+            background-color: var(--btn-active-color);
+            color: #d8d8d8;
+        }
+
+        /* 按钮:聚焦 */
+        .search .btn:focus {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="layout">
+            <div class="search">
+                <input class="input" type="text"/>
+                <button class="btn" onclick="getInput()">OK</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const { ipcRenderer } = require('electron');
+
+        let s = window.location.search.replace('?', '');
+        let propName = s.split('=')[1];
+
+        let inputEle = document.querySelector(".input");
+        inputEle.value = propName;
+        window.onload = function() {
+            inputEle.focus();
+        };
+
+        function getInput() {
+            let inputName = inputEle.value;
+            let reg = /^[a-zA-Z0-9_-]{2,}$/;
+            if (reg.test(inputName)) {
+                ipcRenderer.send("get-input-result", inputName);
+            } else {
+                inputEle.classList.add('input-error');
+                setTimeout(() => {
+                    inputEle.classList.remove('input-error');
+                }, 500);
+            }
+        }
+
+        inputEle.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                getInput();
+            } else if (event.key === "Escape") {
+                ipcRenderer.send("get-input-result", "");
+            }
+        });
+    </script>
+</body>
+
+</html>

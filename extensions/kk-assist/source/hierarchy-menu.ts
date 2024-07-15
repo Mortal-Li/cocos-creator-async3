@@ -1,11 +1,16 @@
 import { readFileSync, writeFileSync } from "fs-extra";
 import KKUtils from "./core/KKUtils";
 import path from "path";
+import packageJSON from '../package.json';
 
 function getPropCode(typeName: string, propName: string) {
     return `
     @property(${typeName})
     private ${propName}: ${typeName} = null;`;
+}
+
+function getInputPropNameAsy(defaultName: string) {
+    return Editor.Message.request(packageJSON.name, "get-input-name", defaultName);
 }
 
 export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]> {
@@ -40,6 +45,9 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
         compMenus.push({
             label: one.type,
             async click() {
+                propName = await getInputPropNameAsy(propName);
+                if (!propName) return;
+
                 let propType = one.type as string;
                 let propTypeName = propType;
                 let importType = "";
@@ -86,6 +94,7 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
                 await KKUtils.refreshResAsy(deUuid);
                 await KKUtils.sleepAsy(0.5);
                 await KKUtils.setPropertyAsy(rootNodeUUid, scriptOrder, propName, propType, one.value);
+                console.log(`绑定 ${propName}<=>${propTypeName} 成功`);
             }
         });
     });
@@ -97,6 +106,9 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
                 {
                     label: "节点",
                     async click() {
+                        propName = await getInputPropNameAsy(propName);
+                        if (!propName) return;
+                        
                         let propCode = getPropCode("Node", propName);
                         let tsStr = readFileSync(scriptPath, "utf-8");
                         let matchRst = tsStr.match(/ extends .*?{/)
@@ -110,6 +122,7 @@ export async function onNodeMenu(info: any): Promise<Editor.Menu.BaseMenuItem[]>
                         await KKUtils.refreshResAsy(deUuid);
                         await KKUtils.sleepAsy(0.5);
                         await KKUtils.setPropertyAsy(rootNodeUUid, scriptOrder, propName, "cc.Node", info.uuid);
+                        console.log(`绑定 ${propName}<=>cc.Node 成功`);
                     }
                 },
                 {

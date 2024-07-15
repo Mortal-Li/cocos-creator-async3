@@ -13,8 +13,9 @@
     "description": "cocos-creator-async3开发高效助手",
     "main": "./dist/main.js",
     "dependencies": {
-        "vue": "^3.1.4",
-        "fs-extra": "^10.0.0"
+        "electron": "^31.0.2",
+        "fs-extra": "^10.0.0",
+        "vue": "^3.1.4"
     },
     "devDependencies": {
         "@cocos/creator-types": "^3.8.2",
@@ -58,6 +59,11 @@
             "open-panel": {
                 "methods": [
                     "openPanel"
+                ]
+            },
+            "get-input-name": {
+                "methods": [
+                    "getBindNameInput"
                 ]
             }
         },
