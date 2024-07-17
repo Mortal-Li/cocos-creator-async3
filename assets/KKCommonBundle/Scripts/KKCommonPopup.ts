@@ -25,10 +25,12 @@ export class KKCommonPopup extends PopupBase {
 
     onLoad() {
         let d = this.recvData;
-        if (d.title) this.titleLbl.string = d.title;
-        if (d.desc) this.descLbl.string = d.desc;
-        if (d.btnTxt) this.btnLbl.string = d.btnTxt;
+        this.titleLbl.string = d.title ?? "Tip";
+        this.descLbl.string = d.desc;
+        this.btnLbl.string = d.btnTxt ?? "OK";
         this.closeNd.active = !d.hideClose;
+
+        this.enableClickBlankToClose();
     }
 
     onBtnClick(evt: Event, name: string): void {
