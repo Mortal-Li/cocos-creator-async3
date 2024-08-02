@@ -37,3 +37,17 @@ export const KKCommonPopupConf = {
 
     //@common_popup
 };
+
+export const KKHallPanelConf = {
+	Test: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKTestPanel",
+    },
+
+    Game: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKGamePanel",
+    },
+
+    //@hall_Panel
+};
