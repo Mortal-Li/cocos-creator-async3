@@ -51,3 +51,13 @@ export const KKHallPanelConf = {
 
     //@hall_Panel
 };
+
+export const KKCommonWidgetConf = {
+	Toast: <IUIConfig> {
+        bundle: KKBundleConf.Common,
+        name: "KKToastWidget",
+		cacheMode: UICacheMode.Cache
+    },
+
+    //@common_Widget
+};

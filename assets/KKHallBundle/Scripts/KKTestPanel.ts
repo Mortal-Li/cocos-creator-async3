@@ -7,6 +7,7 @@
 import { _decorator, Component, Node, Event } from 'cc';
 import { UIBase } from '../../framework/ui/UIBase';
 import kk from '../../framework/kk';
+import KKUtils from '../../KKCommonBundle/Scripts/KKUtils';
 const { ccclass, property } = _decorator;
 
 @ccclass('KKTestPanel')
@@ -27,7 +28,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "toast":
-                
+                KKUtils.showToast("Hello~");
                 break;
 
             case "table":
