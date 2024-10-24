@@ -227,8 +227,8 @@ export default class CocosHelper {
     static genPureColorSpriteFrame(color: Color = Color.BLACK) {
         let imgAst = new ImageAsset({
             _data: new Uint8Array([color.r, color.g, color.b, color.a]),
-            width: 2,
-            height: 2,
+            width: 1,
+            height: 1,
             format: Texture2D.PixelFormat.RGBA8888,
             _compressed: false
         });
@@ -238,7 +238,7 @@ export default class CocosHelper {
 
         let sprFrm = new SpriteFrame();
         sprFrm.texture = ttx;
-        sprFrm.rect = rect(0, 0, 8, 8);
+        sprFrm.packable = false;
 
         return sprFrm;
     }

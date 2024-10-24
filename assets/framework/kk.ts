@@ -1,5 +1,5 @@
 /**
- * 
+ * https://github.com/Mortal-Li/cocos-creator-async3
  * @author Mortal-Li
  * @created Mon Apr 15 2024 12:27:36 GMT+0800 (中国标准时间)
  */

@@ -4,7 +4,7 @@
  * @created Mon Apr 15 2024 15:16:08 GMT+0800 (中国标准时间)
  */
 
-import { Node, UIOpacity, _decorator, tween, v3, EventTouch, UITransform } from 'cc';
+import { Node, UIOpacity, _decorator, tween, v3, EventTouch, UITransform, Widget } from 'cc';
 import { UIBase } from './UIBase';
 import kk from '../kk';
 const { ccclass } = _decorator;
@@ -36,9 +36,9 @@ export class PopupBase extends UIBase {
      * 打开弹窗的动画，如果不需要或另外实现则子类中覆盖
      */
     showAnim() {
+        this.node.getComponent(Widget).updateAlignment();   //fix: scale cause widget failed
         this.node.setScale(0, 0, 1);
         tween(this.node)
-            .delay(0)
             .to(0.2, { scale: v3(1, 1, 1) }, { easing: "backOut" })
             .start();
     }
@@ -59,13 +59,15 @@ export class PopupBase extends UIBase {
 
     /**
      * 点击非nds数组中的对象，则关闭弹窗，需手动调用开启;
+     * 可以不传参数，表示使用第一个子节点来判断;
      * 其他触摸控件如Button、Toggle等会优先响应，不用加到数组
      */
-    enableClickBlankToClose(nds: Node[]) {
-        //todo 无参数，则默认第一个子节点
+    enableClickBlankToClose(nds?: Node[]) {
+        if ((!nds || nds.length == 0) && this.node.children.length > 0) nds = [this.node.children[0]];
+
         this.node.on(Node.EventType.TOUCH_END, (evt: EventTouch) => {
-            let startPos = evt.getStartLocation();
-            let endPos = evt.getLocation();
+            let startPos = evt.getUIStartLocation();
+            let endPos = evt.getUILocation();
             let subPos = endPos.subtract(startPos);
             if (Math.abs(subPos.x) < 15 && Math.abs(subPos.y) < 15) {
                 let needClose = true;
@@ -76,10 +78,7 @@ export class PopupBase extends UIBase {
                     }
                 }
                 
-                if (needClose) {
-                    this.node.off(Node.EventType.TOUCH_END);
-                    this.close();
-                }
+                needClose && this.close();
             }
         }, this);
     }

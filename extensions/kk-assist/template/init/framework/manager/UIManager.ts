@@ -4,7 +4,7 @@
  * @created Mon Apr 15 2024 15:18:34 GMT+0800 (中国标准时间)
  */
 
-import { Prefab, assetManager, log, Node, BlockInputEvents, Sprite, instantiate, UIOpacity, UITransform } from "cc";
+import { Prefab, assetManager, Node, BlockInputEvents, Sprite, instantiate, UIOpacity, UITransform, SpriteFrame } from "cc";
 import kk from "../kk";
 import { LayerBase } from "../ui/LayerBase";
 import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, UICacheMode, WIDGET_PATH } from "../ui/UIConfig";
@@ -51,7 +51,7 @@ export default class UIManager {
                 let scpt = layer.getComponent(scptName) as LayerBase;
                 scpt.recvData = data;
                 scpt.refresh();
-                log("show Layer", newConf.name);
+                kk.debugMgr.log("show Layer", newConf.name);
                 T._clearLayer(preConf);
                 return ;
             }
@@ -59,7 +59,7 @@ export default class UIManager {
 
         let layer = await T._genUIBaseAsync(newConf, LAYER_PATH, data);
         layer.parent = kk.godNode;
-        log("create Layer", newConf.name);
+        kk.debugMgr.log("create Layer", newConf.name);
 
         T._clearLayer(preConf);
     }
@@ -79,7 +79,7 @@ export default class UIManager {
                 let scpt = layer.getComponent(scptName) as LayerBase;
                 scpt.recvData = data;
                 scpt.refresh();
-                log("refresh Layer", conf.name);
+                kk.debugMgr.log("refresh Layer", conf.name);
             } else {
                 let delLayer = kk.godNode.getChildByName(conf.name);
                 delLayer.name = "removed";
@@ -88,7 +88,7 @@ export default class UIManager {
                 layer.parent = kk.godNode;
                 delLayer.destroy();
                 
-                log("reset Layer", conf.name);
+                kk.debugMgr.log("reset Layer", conf.name);
             }
 
         }
@@ -109,15 +109,18 @@ export default class UIManager {
             let layer = kk.godNode.getChildByName(preConf.name);
             if (preConf.cacheMode == UICacheMode.Stay) {
                 layer.active = false;
-                log("hide Layer", preConf.name);
+                kk.debugMgr.log("hide Layer", preConf.name);
             } else {
                 layer.destroy();
-                log("destroy Layer", preConf.name);
+                kk.debugMgr.log("destroy Layer", preConf.name);
             }
         }
     }
 
     //////////////////////////////////////////// Popup ////////////////////////////////////////////
+
+    private pureBanFrm: SpriteFrame = null;
+    
     /**
      * 显示对应配置的弹窗，可返回弹窗界面中用户设置的数据
      * @param conf 要显示的弹窗配置
@@ -134,7 +137,11 @@ export default class UIManager {
         CocosHelper.addWidget(nd, { left: 0, right: 0, top: 0, bottom: 0 });
 
         let darkBg = new Node("dark");
-        darkBg.addComponent(Sprite).spriteFrame = CocosHelper.genPureColorSpriteFrame();
+        if (!T.pureBanFrm) {
+            T.pureBanFrm = CocosHelper.genPureColorSpriteFrame();
+            T.pureBanFrm.addRef();
+        }
+        darkBg.addComponent(Sprite).spriteFrame = T.pureBanFrm;
         darkBg.addComponent(UIOpacity).opacity = 180;
         darkBg.parent = nd;
         CocosHelper.addWidget(darkBg, { left: 0, right: 0, top: 0, bottom: 0 });
@@ -144,7 +151,7 @@ export default class UIManager {
         let scpt = popup.getComponent(scptName) as PopupBase;
         popup.parent = nd;
         scpt.showAnim();
-        log("show Popup", conf.name);
+        kk.debugMgr.log("show Popup", conf.name);
 
         return new Promise<any>((resolve, reject) => {
             scpt.onDestroyCall = resolve;
@@ -181,7 +188,7 @@ export default class UIManager {
 
     _autoRemovePopup(p: Node) {
         p?.destroy();
-        log("close Popup", p.name);
+        kk.debugMgr.log("close Popup", p.name);
     }
 
     //////////////////////////////////////////// Panel ////////////////////////////////////////////
