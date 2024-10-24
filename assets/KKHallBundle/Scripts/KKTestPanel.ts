@@ -8,6 +8,7 @@ import { _decorator, Component, Node, Event } from 'cc';
 import { UIBase } from '../../framework/ui/UIBase';
 import kk from '../../framework/kk';
 import KKUtils from '../../KKCommonBundle/Scripts/KKUtils';
+import { KKHallPopupConf } from '../../Boot/Scripts/KKGameUIConf';
 const { ccclass, property } = _decorator;
 
 @ccclass('KKTestPanel')
@@ -32,7 +33,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "table":
-                
+                kk.uiMgr.showPopupAsync(KKHallPopupConf.TableView);
                 break;
 
             case "http":

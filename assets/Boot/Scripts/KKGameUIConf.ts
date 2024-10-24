@@ -61,3 +61,12 @@ export const KKCommonWidgetConf = {
 
     //@common_Widget
 };
+
+export const KKHallPopupConf = {
+	TableView: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKTableViewPopup",
+    },
+
+    //@hall_popup
+};
