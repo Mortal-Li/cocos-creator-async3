@@ -59,6 +59,12 @@ export const KKCommonWidgetConf = {
 		cacheMode: UICacheMode.Cache
     },
 
+    Loading: <IUIConfig> {
+        bundle: KKBundleConf.Common,
+        name: "KKLoadingWidget",
+		cacheMode: UICacheMode.Cache
+    },
+
     //@common_Widget
 };
 
@@ -66,6 +72,11 @@ export const KKHallPopupConf = {
 	TableView: <IUIConfig> {
         bundle: KKBundleConf.Hall,
         name: "KKTableViewPopup",
+    },
+
+    HttpTest: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKHttpTestPopup",
     },
 
     //@hall_popup

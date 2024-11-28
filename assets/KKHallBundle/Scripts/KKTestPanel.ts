@@ -37,7 +37,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "http":
-                
+                kk.uiMgr.showPopupAsync(KKHallPopupConf.HttpTest);
                 break;
 
             case "socket":

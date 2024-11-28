@@ -30,6 +30,15 @@ export default class KKUtils {
             nd.parent = kk.godNode;
         });
     }
+
+    static showLoading(isShow: boolean) {
+        kk.godNode.getChildByName(KKCommonWidgetConf.Loading.name)?.destroy();
+        if (isShow) {
+            kk.uiMgr.createWidgetAsync(KKCommonWidgetConf.Loading).then((nd: Node) => {
+                nd.parent = kk.godNode;
+            });
+        }
+    }
 }
 
 
