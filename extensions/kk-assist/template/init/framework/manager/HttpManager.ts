@@ -19,6 +19,10 @@ interface HttpOptionInterface {
      */
     timeout?: number;
     /**
+     * 默认值取决于body，body为空则是GET，否则POST
+     */
+    method?: string;
+    /**
      * 响应类型: json(default), text, arraybuffer, blob, document
      */
     responseType?: 'json' | 'text' | 'arraybuffer' | 'blob' | 'document';
@@ -37,7 +41,7 @@ export default class HttpManager {
                 timeout: option.timeout || 8000,
                 responseType: option.responseType || 'json',
                 contentType: option.contentType || 'application/x-www-form-urlencoded',
-                method: option.body ? 'POST' : 'GET',
+                method: option.method || (option.body ? 'POST' : 'GET'),
                 body: option.body
             }, resolve, reject);
         });
@@ -68,12 +72,10 @@ export default class HttpManager {
         };
         xhr.open(params.method, params.url, true);
 
-        if (params.method === 'POST') {
-            xhr.setRequestHeader('Content-Type', params.contentType);
-        }
-
         let sendData = null;
         if (params.body) {
+            xhr.setRequestHeader('Content-Type', params.contentType);
+
             if (params.contentType == 'application/x-www-form-urlencoded') {
                 let formData = [];
                 for (let key in params.body) {
