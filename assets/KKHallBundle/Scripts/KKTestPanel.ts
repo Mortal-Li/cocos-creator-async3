@@ -41,7 +41,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "socket":
-                
+                kk.uiMgr.showPopupAsync(KKHallPopupConf.SocketTest);
                 break;
 
             case "frame":

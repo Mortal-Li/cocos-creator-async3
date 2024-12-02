@@ -79,5 +79,10 @@ export const KKHallPopupConf = {
         name: "KKHttpTestPopup",
     },
 
+    SocketTest: <IUIConfig> {
+        bundle: KKBundleConf.Hall,
+        name: "KKSocketTestPopup",
+    },
+
     //@hall_popup
 };
