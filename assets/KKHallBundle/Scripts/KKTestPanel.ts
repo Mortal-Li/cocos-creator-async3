@@ -45,7 +45,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "frame":
-                
+                kk.uiMgr.showPopupAsync(KKHallPopupConf.Framing);
                 break;
 
             case "adapter":

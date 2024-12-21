@@ -35,7 +35,7 @@ export default class AsyncHelper {
      * @param target 动画执行目标
      * @param twn 非永久循环动画
      */
-    static tweenAsync<T>(target: T, twn: Tween<T>) {
+    static tweenAsync<T extends object>(target: T, twn: Tween<T>) {
         return new Promise((resolve) => {
             tween(target).then(twn).call(resolve).start();
         })

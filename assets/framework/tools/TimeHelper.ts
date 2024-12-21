@@ -35,7 +35,7 @@ export default class TimeHelper {
      * @param milSec 毫秒，可选
      * @param div 分隔符，默认'/'
      */
-     static getCurDate(milSec?: number, div = '/') {
+    static getCurDate(milSec?: number, div = '/') {
         let ret = '';
 
         let d = milSec ? new Date(milSec) : new Date();
