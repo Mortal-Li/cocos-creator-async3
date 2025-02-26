@@ -5,7 +5,7 @@
  */
 
 import { Asset, AssetManager, Canvas, Component, Tween, assetManager, log, tween } from "cc";
-import kk from "../kk";
+import CocosHelper from "./CocosHelper";
 
 export default class AsyncHelper {
     
@@ -20,7 +20,7 @@ export default class AsyncHelper {
      */
     static sleepAsync(t: number, target?: Component) {
         return new Promise((resolve, reject) => {
-            if (!target) target = kk.godNode.getComponent(Canvas);
+            if (!target) target = CocosHelper.getRoot().getComponent(Canvas);
             target.scheduleOnce(() => {
                 resolve(null);
             }, t);
@@ -35,7 +35,7 @@ export default class AsyncHelper {
      * @param target 动画执行目标
      * @param twn 非永久循环动画
      */
-    static tweenAsync<T>(target: T, twn: Tween<T>) {
+    static tweenAsync<T extends object>(target: T, twn: Tween<T>) {
         return new Promise((resolve) => {
             tween(target).then(twn).call(resolve).start();
         })
@@ -113,7 +113,7 @@ export default class AsyncHelper {
      * @param target 可选，利用target的scheduleOnce方法实现跳帧，默认为UI根节点的画布组件
      */
     static execPerFrameAsync(logicGen: Generator, t: number, target?: Component) {
-        if (!target) target = kk.godNode.getComponent(Canvas);
+        if (!target) target = CocosHelper.getRoot().getComponent(Canvas);
         return new Promise<void>((resolve, reject) => {
 			let exec = () => {
 				let startTime = Date.now();

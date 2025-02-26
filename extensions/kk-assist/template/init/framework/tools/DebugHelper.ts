@@ -5,7 +5,6 @@
  */
 
 import { error, log, warn, Node, Layout, ScrollView, Label, UITransform, Color, color, Button } from "cc";
-import kk from "../kk";
 import TimeHelper from "../tools/TimeHelper";
 import CocosHelper from "../tools/CocosHelper";
 
@@ -16,9 +15,9 @@ enum DebugLevel {
     INFO
 };
 
-export default class DebugManger {
+class DebugHelper {
 
-    public static readonly Level = DebugLevel;
+    public readonly Level = DebugLevel;
     public level: DebugLevel = DebugLevel.INFO;
     private logContent: Node = null;
 
@@ -45,10 +44,10 @@ export default class DebugManger {
 
     /**
      * 当不方便查看日志时，可以启动此开关，比如已发布的线上游戏
-     * 仅限DebugManger打印的日志
+     * 仅限DebugHelper打印的日志
      */
     switchDebugLogBtn() {
-        let logBtn = kk.godNode.getChildByName("logBtn");
+        let logBtn = CocosHelper.getRoot().getChildByName("logBtn");
         if (logBtn) {
             logBtn.active = !logBtn.active;
         } else {
@@ -59,11 +58,12 @@ export default class DebugManger {
 
     private _initLogPanel() {
         let logPanel = new Node();
-        kk.godNode.addChild(logPanel);
+        let root = CocosHelper.getRoot();
+        root.addChild(logPanel);
     
         CocosHelper.addSprite(logPanel, { spriteFrame: CocosHelper.genPureColorSpriteFrame(color(0, 0, 0, 180)) });
         let bgTsm = logPanel.getComponent(UITransform);
-        bgTsm.setContentSize(kk.godNode.getComponent(UITransform).contentSize);
+        bgTsm.setContentSize(root.getComponent(UITransform).contentSize);
     
         let content = new Node();
         content.addComponent(UITransform).anchorY = 1;
@@ -91,7 +91,7 @@ export default class DebugManger {
             enableBold: true
         });
         
-        kk.godNode.addChild(logBtn);
+        root.addChild(logBtn);
         logBtn.addComponent(Button);
         logBtn.on(Button.EventType.CLICK, () => {
             logPanel.active = !logPanel.active;
@@ -126,5 +126,4 @@ export default class DebugManger {
     }
 };
 
-
-
+export default new DebugHelper();
