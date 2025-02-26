@@ -8,7 +8,6 @@ import { Node, v3 } from "cc";
 import { KKCommonPopupConf, KKCommonWidgetConf } from "../../Boot/Scripts/KKGameUIConf"
 import kk from "../../framework/kk"
 
-
 export default class KKUtils {
 
     static showCommonPopup(options: {
@@ -24,18 +23,18 @@ export default class KKUtils {
 
     static showToast(msg: string) {
         kk.uiMgr.createWidgetAsync(KKCommonWidgetConf.Toast, { msg: msg }).then((nd: Node) => {
-            kk.godNode.children.forEach((nd, i) => {
+            kk.uiMgr.root().children.forEach((nd, i) => {
                 if (nd.name == KKCommonWidgetConf.Toast.name) nd.position = v3(nd.position.x, nd.position.y + 110, nd.position.z);
             });
-            nd.parent = kk.godNode;
+            nd.parent = kk.uiMgr.root();
         });
     }
 
     static showLoading(isShow: boolean) {
-        kk.godNode.getChildByName(KKCommonWidgetConf.Loading.name)?.destroy();
+        kk.uiMgr.root().getChildByName(KKCommonWidgetConf.Loading.name)?.destroy();
         if (isShow) {
             kk.uiMgr.createWidgetAsync(KKCommonWidgetConf.Loading).then((nd: Node) => {
-                nd.parent = kk.godNode;
+                nd.parent = kk.uiMgr.root();
             });
         }
     }

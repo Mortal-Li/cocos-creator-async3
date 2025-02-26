@@ -4,10 +4,14 @@
  * @created Mon Apr 15 2024 16:29:38 GMT+0800 (中国标准时间)
  */
 
-import { Node, SpriteFrame, Sprite, Color, Label, Widget, Layout, Texture2D, rect, UITransform, ImageAsset, builtinResMgr } from "cc";
+import { Node, SpriteFrame, Sprite, Color, Label, Widget, Layout, Texture2D, UITransform, ImageAsset, builtinResMgr, director } from "cc";
 
 
 export default class CocosHelper {
+
+    static getRoot() {
+        return director.getScene().getChildByName('Canvas');
+    }
 
     static addSprite(nd: Node, options: {
         spriteFrame: SpriteFrame;

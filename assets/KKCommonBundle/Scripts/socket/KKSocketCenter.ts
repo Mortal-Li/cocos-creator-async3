@@ -4,6 +4,7 @@
  * @created Mon Dec 02 2024 11:34:55 GMT+0800 (中国标准时间)
  */
 
+import DebugHelper from "db://assets/framework/tools/DebugHelper";
 import kk from "../../../framework/kk";
 import { CMDID } from "./KKCMDID";
 
@@ -25,7 +26,7 @@ class KKSocketCenter {
         await kk.socketMgr.connectAsync({
             url: url,
             getHeartbeat: () => {
-                kk.debugMgr.log(">>> heartbeat")
+                DebugHelper.log(">>> heartbeat")
                 return "";
             },
             parseNetData: (data: any) => {
@@ -61,7 +62,7 @@ class KKSocketCenter {
                 content = args;
                 break;
         }
-        kk.debugMgr.log("---> send ", cmd, content);
+        DebugHelper.log("---> send ", cmd, content);
         return kk.socketMgr.reqAsync(cmd, JSON.stringify({
             cmd: cmd,
             data: content

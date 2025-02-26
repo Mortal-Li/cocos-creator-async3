@@ -5,26 +5,35 @@
  */
 
 import { Prefab, assetManager, Node, BlockInputEvents, Sprite, instantiate, UIOpacity, UITransform, SpriteFrame } from "cc";
-import kk from "../kk";
 import { LayerBase } from "../ui/LayerBase";
 import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, UICacheMode, WIDGET_PATH } from "../ui/UIConfig";
 import { PopupBase } from "../ui/PopupBase";
 import { UIBase } from "../ui/UIBase";
 import AsyncHelper from "../tools/AsyncHelper";
 import CocosHelper from "../tools/CocosHelper";
+import DebugHelper from "../tools/DebugHelper";
 
 
 export default class UIManager {
 
     //////////////////////////////////////////// Layer ////////////////////////////////////////////
-    private _curLayerConf : IUIConfig;
+    private _curLayerConf: IUIConfig = null;
+    private _root: Node = null;
+
+    init() {
+        this._root = CocosHelper.getRoot();
+    }
+
+    root() {
+        return this._root;
+    }
 
     getCurLayerConf() {
         return this._curLayerConf;
     }
 
     getCurLayer() {
-        return kk.godNode.getChildByName(this._curLayerConf.name);
+        return this._root.getChildByName(this._curLayerConf.name);
     }
     
     /**
@@ -44,22 +53,22 @@ export default class UIManager {
         T._curLayerConf = newConf;
 
         if (newConf.cacheMode == UICacheMode.Stay) {
-            let layer = kk.godNode.getChildByName(newConf.name);
+            let layer = this._root.getChildByName(newConf.name);
             if (layer) {
                 layer.active = true;
                 let scptName = newConf.script ? newConf.script : newConf.name;
                 let scpt = layer.getComponent(scptName) as LayerBase;
                 scpt.recvData = data;
                 scpt.refresh();
-                kk.debugMgr.log("show Layer", newConf.name);
+                DebugHelper.log("show Layer", newConf.name);
                 T._clearLayer(preConf);
                 return ;
             }
         }
 
         let layer = await T._genUIBaseAsync(newConf, LAYER_PATH, data);
-        layer.parent = kk.godNode;
-        kk.debugMgr.log("create Layer", newConf.name);
+        layer.parent = this._root;
+        DebugHelper.log("create Layer", newConf.name);
 
         T._clearLayer(preConf);
     }
@@ -74,21 +83,21 @@ export default class UIManager {
         let conf = T._curLayerConf;
         if (conf) {
             if (conf.cacheMode == UICacheMode.Stay) {
-                let layer = kk.godNode.getChildByName(conf.name);
+                let layer = this._root.getChildByName(conf.name);
                 let scptName = conf.script ? conf.script : conf.name;
                 let scpt = layer.getComponent(scptName) as LayerBase;
                 scpt.recvData = data;
                 scpt.refresh();
-                kk.debugMgr.log("refresh Layer", conf.name);
+                DebugHelper.log("refresh Layer", conf.name);
             } else {
-                let delLayer = kk.godNode.getChildByName(conf.name);
+                let delLayer = this._root.getChildByName(conf.name);
                 delLayer.name = "removed";
 
                 let layer = await T._genUIBaseAsync(conf, LAYER_PATH, data);
-                layer.parent = kk.godNode;
+                layer.parent = this._root;
                 delLayer.destroy();
                 
-                kk.debugMgr.log("reset Layer", conf.name);
+                DebugHelper.log("reset Layer", conf.name);
             }
 
         }
@@ -106,13 +115,13 @@ export default class UIManager {
 
     private _clearLayer(preConf: IUIConfig) {
         if (preConf) {
-            let layer = kk.godNode.getChildByName(preConf.name);
+            let layer = this._root.getChildByName(preConf.name);
             if (preConf.cacheMode == UICacheMode.Stay) {
                 layer.active = false;
-                kk.debugMgr.log("hide Layer", preConf.name);
+                DebugHelper.log("hide Layer", preConf.name);
             } else {
                 layer.destroy();
-                kk.debugMgr.log("destroy Layer", preConf.name);
+                DebugHelper.log("destroy Layer", preConf.name);
             }
         }
     }
@@ -151,7 +160,7 @@ export default class UIManager {
         let scpt = popup.getComponent(scptName) as PopupBase;
         popup.parent = nd;
         scpt.showAnim();
-        kk.debugMgr.log("show Popup", conf.name);
+        DebugHelper.log("show Popup", conf.name);
 
         return new Promise<any>((resolve, reject) => {
             scpt.onDestroyCall = resolve;
@@ -164,7 +173,7 @@ export default class UIManager {
     getPopup(popupConf: IUIConfig, layerConf: IUIConfig = null) {
         if (!layerConf) layerConf = this._curLayerConf;
         
-        let layer = kk.godNode.getChildByName(layerConf.name);
+        let layer = this._root.getChildByName(layerConf.name);
         if (layer) {
             return layer.getChildByName(popupConf.name);
         }
@@ -176,7 +185,7 @@ export default class UIManager {
      * 关闭所有已展示的弹窗
      */
     closeAllPopup() {
-        let layer = kk.godNode.getChildByName(this._curLayerConf.name);
+        let layer = this._root.getChildByName(this._curLayerConf.name);
         if (layer) {
             layer.children.forEach((nd, i) => {
                 if (nd.name.endsWith("Popup")) {
@@ -188,7 +197,7 @@ export default class UIManager {
 
     _autoRemovePopup(p: Node) {
         p?.destroy();
-        kk.debugMgr.log("close Popup", p.name);
+        DebugHelper.log("close Popup", p.name);
     }
 
     //////////////////////////////////////////// Panel ////////////////////////////////////////////
@@ -228,11 +237,11 @@ export default class UIManager {
      * 屏蔽UI触摸
      */
     banTouch() {
-        let ban = kk.godNode.getChildByName("_ban");
+        let ban = this._root.getChildByName("_ban");
         if (!ban) {
             let node = new Node("_ban");
-            node.addComponent(UITransform).setContentSize(kk.godNode.getComponent(UITransform).contentSize);
-            kk.godNode.addChild(node);
+            node.addComponent(UITransform).setContentSize(this._root.getComponent(UITransform).contentSize);
+            this._root.addChild(node);
             node.addComponent(BlockInputEvents);
         }
     }
@@ -241,7 +250,7 @@ export default class UIManager {
      * 恢复UI触摸
      */
     unbanTouch() {
-        let ban = kk.godNode.getChildByName("_ban");
+        let ban = this._root.getChildByName("_ban");
         if (ban) ban.destroy();
     }
 }

@@ -4,7 +4,7 @@
  * @created Sat Apr 27 2024 14:32:13 GMT+0800 (中国标准时间)
  */
 
-import kk from "../kk";
+import DebugHelper from "../tools/DebugHelper";
 
 /**
  * Http请求相关设置
@@ -54,7 +54,7 @@ export default class HttpManager {
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    kk.debugMgr.log({ url: params.url, body: params.body, recv: xhr.response });
+                    DebugHelper.log({ url: params.url, body: params.body, recv: xhr.response });
                     resolve(xhr.response);
                 } else {
                     reject('Please Check Network! ' + xhr.status);
