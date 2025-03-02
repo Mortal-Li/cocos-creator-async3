@@ -104,7 +104,7 @@ export class SafeWidgetAdapter extends Component {
             }
             
             if (wgt.isAlignTop && T.top) {
-                tsm.width = T.originValue.height + top;
+                tsm.height = T.originValue.height + top;
                 T.wgt.updateAlignment();
                 T.wgt.top = T.originValue.top;
             } else if (wgt.isAlignBottom && T.bottom) {
