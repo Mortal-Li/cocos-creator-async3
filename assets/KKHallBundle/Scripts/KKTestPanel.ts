@@ -50,7 +50,7 @@ export class KKTestPanel extends UIBase {
                 break;
 
             case "adapter":
-                
+                kk.uiMgr.showPopupAsync(KKHallPopupConf.AdapterTest);
                 break;
         }
     }
