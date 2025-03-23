@@ -12,6 +12,19 @@ export default class KKUtils {
         });
     }
 
+    static biggerThanVer(ver: string) {
+        let tgtVers = ver.split('.');
+        let curVers = Editor.App.version.split('.');
+
+        for (let i = 0; i < curVers.length; ++i) {
+            if (Number(curVers[i]) > Number(tgtVers[i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static getPluginPath() {
         return join(Editor.Project.path, "extensions", packageJSON.name);
     }
@@ -56,7 +69,11 @@ export default class KKUtils {
     }
 
     static genSceneAsy(url: string) {
-        return KKUtils.genAssetsAsy(url, "db://internal/default_file_content/scene-2d");
+        let astUrl = '';
+        if (KKUtils.biggerThanVer("3.8.2")) astUrl = 'db://internal/default_file_content/scene/scene-2d.scene';
+        else astUrl = 'db://internal/default_file_content/scene-2d';
+
+        return KKUtils.genAssetsAsy(url, astUrl);
     }
 
     static async genAssetsAsy(targetUrl: string, templateUrl: string) {
@@ -77,10 +94,10 @@ export default class KKUtils {
         return Editor.Message.request('scene', 'save-scene');
     }
 
-    static genCompAsy(nodeUuid: string, compName: string) {
+    static genCompAsy(nodeUuid: string, compUuid: string) {
         return Editor.Message.request('scene', 'create-component', { 
             uuid: nodeUuid,
-            component: compName
+            component: compUuid
         });
     }
 
@@ -106,6 +123,31 @@ export default class KKUtils {
                     uuid: propUUid,
                 },
             },
+        });
+    }
+
+    static checkFramework() {
+        let _check = (rsv: Function) => {
+            Editor.Message.request('scene', 'query-classes', {
+                extends: "cc.Component"
+            }).then((infos) => {
+                let isOK = false;
+                for (let l = infos.length - 1; l >= 0; --l) {
+                    if (infos[l].name == 'Adapter') {
+                        isOK = true;
+                        break;
+                    }
+                }
+                if (isOK) {
+                    rsv();
+                } else {
+                    setTimeout(() => { _check(rsv); }, 300);
+                }
+            });
+        };
+
+        return new Promise<void>((resolve, reject) => {
+            _check(resolve);
         });
     }
 }

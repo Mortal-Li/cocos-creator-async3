@@ -15,6 +15,7 @@ export default class KKCore {
                 buttons: ["OK"]
             });
         } else {
+            console.log("Start initializing ...");
             let dstPath = join(Editor.Project.path, "assets");
 
             let srcPath = join(KKUtils.getPluginPath(), "template", "init");
@@ -32,18 +33,24 @@ export default class KKCore {
             }
             KKCore.projPrefix = pfx;
 
+            //只是对资源的刷新，如果添加了新代码，代码有个编译时间不包含在内
+            //programming:compiled 编译完毕的广播事件
             await KKUtils.refreshResAsy("db://assets");
-            //刷新后，手动间隔，避免组件找不到
-            await KKUtils.sleepAsy(0.6);
+            //等待代码编译完毕
+            await KKUtils.checkFramework();
 
             await KKUtils.genSceneAsy("db://assets/Boot/Stage.scene");
             await KKUtils.openSceneAsy("db://assets/Boot/Stage.scene");
             let rootInfo = await KKUtils.getSceneRootNodeInfoAsy();
             //@ts-ignore
             let nodeUuid: string = rootInfo.children[0].uuid;
-            await KKUtils.genCompAsy(nodeUuid, "Adapter");
-            await KKUtils.genCompAsy(nodeUuid, "Stage");
+            let uuid1 = await KKUtils.url2uuidAsy("db://assets/framework/widget/Adapter.ts");
+            await KKUtils.genCompAsy(nodeUuid, Editor.Utils.UUID.compressUUID(uuid1, false));
+            let uuid2 = await KKUtils.url2uuidAsy("db://assets/Boot/Scripts/Stage.ts");
+            await KKUtils.genCompAsy(nodeUuid, Editor.Utils.UUID.compressUUID(uuid2, false));
             await KKUtils.saveSceneAsy();
+
+            console.log("Initialization complete.");
         }
     }
 
