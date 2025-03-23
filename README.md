@@ -78,9 +78,13 @@ kk.uiMgr.showPopupAsync(KKHallPopupConf.Setup).then((ret) => {
 });
 
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
-kk.uiMgr.createPanelAsync(PanelConf.Game);
-kk.uiMgr.createWidgetAsync(WidgetConf.Toast);
+kk.uiMgr.createPanelAsync(PanelConf.Shop);
+let panel = await kk.uiMgr.createPanelAsync(PanelConf.Shop);
+panel.parent = this.node;
 
+kk.uiMgr.createWidgetAsync(WidgetConf.Toast);
+let wgt = await kk.uiMgr.createWidgetAsync(WidgetConf.Toast);
+wgt.parent = this.node;
 
 // http
 let ret = await kk.httpMgr.reqAsync(...);
