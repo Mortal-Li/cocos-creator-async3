@@ -101,5 +101,8 @@ kk.socketMgr.off(cmd, callback, target);
 ```
 框架中的**AsyncHelper**脚本也提供了其他一些异步方法，比如异步等待、异步动画、异步分帧处理等。  
 
+#### 6、同步框架代码修改
+如果你修改了framework下的资源，别的项目或者新项目也想要使用最新的framework，可以在插件根目录，运行**npm run sync-kk**命令，即可将最新的framework同步到插件中，别的项目使用这个插件，即可用到最新的framework。  
+
 详细使用以及其他使用示例请阅读框架源码或运行demo工程查看。  
 [更新日志](https://github.com/Mortal-Li/cocos-creator-async3/blob/main/CHANGELOG.md)
